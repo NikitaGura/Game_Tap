@@ -11,14 +11,16 @@ import CoreData
 
 final class PersistenceSerivce{
     
+    static let shared = PersistenceSerivce()
+    
     // MARK: - Core Data stack
     private init(){}
     
-    static var context: NSManagedObjectContext {
+    var context: NSManagedObjectContext {
         return persistentContainer.viewContext
     }
     
-    static var persistentContainer: NSPersistentContainer = {
+    var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "Model")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
@@ -30,7 +32,7 @@ final class PersistenceSerivce{
     
     // MARK: - Core Data Saving support
     
-    static func saveContext () {
+    func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {

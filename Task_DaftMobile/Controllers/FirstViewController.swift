@@ -14,13 +14,13 @@ class FirstViewController: UIViewController {
     private lazy var labelTimerPrepare = UILabel()
     private lazy var labelTimerGame = UILabel()
     private lazy var labelScore = UILabel()
-
+    
     private var timer: Timer?
     private var secondPrepare = 3
     private var score: Int16 = 0
     private let secondGame = 5
     private var dateGameStarted: NSDate?
-  
+    
     private let oneTapGestureRecognizer = UITapGestureRecognizer()
     
     override func viewDidLoad() {
@@ -33,7 +33,7 @@ class FirstViewController: UIViewController {
         setupOneTapGestureRecognizer()
         setupObserverdidEnterBackground()
     }
-
+    
     override func loadView() {
         setupView()
         setupLabelTimer()
@@ -77,15 +77,15 @@ class FirstViewController: UIViewController {
             
             labelTimerGame.topAnchor.constraint(equalTo: labelScore.bottomAnchor, constant: 30),
             labelTimerGame.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+            ])
     }
     
     private func setupTimer(){
-     timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
     }
     
     private func setupObserverdidEnterBackground(){
-            NotificationCenter.default.addObserver(self, selector: #selector(myObserverMethod), name:UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(myObserverMethod), name:UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
     private func setupOneTapGestureRecognizer(){
@@ -95,24 +95,24 @@ class FirstViewController: UIViewController {
     }
     
     private func saveResultGame(){
-        let game = Game(context: PersistenceSerivce.context)
+        let game = Game(context: PersistenceSerivce.shared.context)
         game.score = score
         game.gameDate = dateGameStarted
-        PersistenceSerivce.saveContext()
+        PersistenceSerivce.shared.saveContext()
         dateGameStarted = nil
     }
     
     
     //MARK: Selectors
-   @objc func myObserverMethod() {
-    if timer != nil {
-        timer?.invalidate()
-        let alert = UIAlertController(title: "Game paused", message: "Continue?", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
-        }))
-        present(alert, animated: true, completion: nil)
-    }
+    @objc func myObserverMethod() {
+        if timer != nil {
+            timer?.invalidate()
+            let alert = UIAlertController(title: "Game paused", message: "Continue?", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+            }))
+            present(alert, animated: true, completion: nil)
+        }
     }
     
     @objc func plusScore(){
@@ -123,8 +123,8 @@ class FirstViewController: UIViewController {
     }
     
     @objc func update() {
-       secondPrepare -= 1;
-       labelTimerPrepare.text = "\(secondPrepare)"
+        secondPrepare -= 1;
+        labelTimerPrepare.text = "\(secondPrepare)"
         if (secondPrepare < 1) {
             if (dateGameStarted == nil){ dateGameStarted = NSDate()}
             labelTimerPrepare.text = "PLAY"

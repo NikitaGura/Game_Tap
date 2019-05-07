@@ -38,7 +38,7 @@ class ChallengeListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         do{
-            let games = try PersistenceSerivce.context.fetch(fethRequestGames)
+            let games = try PersistenceSerivce.shared.context.fetch(fethRequestGames)
             self.arrGame = games
         } catch {}
         
@@ -46,17 +46,17 @@ class ChallengeListViewController: UIViewController {
         
         if(arrGame.count > 5){
             arrGame.suffix(from: 5).forEach {
-            PersistenceSerivce.context.delete($0)
+                PersistenceSerivce.shared.context.delete($0)
             }
             for _ in 6...arrGame.count{
                 arrGame.removeLast()
             }
         }
-        PersistenceSerivce.saveContext()
+        PersistenceSerivce.shared.saveContext()
     }
-
     
-   
+    
+    
     //MARK: Methods
     private func setupresultsCollection(){
         reusltsCollection.dataSource = self
@@ -75,13 +75,13 @@ class ChallengeListViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             reusltsCollection.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            reusltsCollection.topAnchor.constraint(equalTo: view.topAnchor),
-            reusltsCollection.heightAnchor.constraint(equalTo: view.heightAnchor, constant: -10),
-            reusltsCollection.widthAnchor.constraint(equalTo: view.widthAnchor),
+            reusltsCollection.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            reusltsCollection.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor),
+            reusltsCollection.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
             
-            buttonPlay.topAnchor.constraint(equalTo: reusltsCollection.bottomAnchor, constant: -25),
+            buttonPlay.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             buttonPlay.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+            ])
     }
     
     //MARK: Selectors
@@ -96,7 +96,7 @@ class ChallengeListViewController: UIViewController {
 extension ChallengeListViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5 > arrGame.count ? arrGame.count : 5
+        return 2 > arrGame.count ? arrGame.count : 2
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
