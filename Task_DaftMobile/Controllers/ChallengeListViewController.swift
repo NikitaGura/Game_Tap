@@ -96,7 +96,7 @@ class ChallengeListViewController: UIViewController {
 extension ChallengeListViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2 > arrGame.count ? arrGame.count : 2
+        return 5 > arrGame.count ? arrGame.count : 5
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
