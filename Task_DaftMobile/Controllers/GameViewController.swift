@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FirstViewController: UIViewController {
+class GameViewController: UIViewController {
     
     //Mark: Variables
     private lazy var labelTimerPrepare = UILabel()
@@ -150,8 +150,7 @@ class FirstViewController: UIViewController {
                 }))
                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {  action in
                     self.saveResultGame()
-                    self.present(ChallengeListViewController(), animated: true, completion: nil)
-                    
+                    self.dismiss(animated: true, completion: nil)
                 }))
                 present(alert, animated: true, completion: nil)
             }
