@@ -9,6 +9,10 @@
 import UIKit
 import CoreData
 
+protocol ChallengeListViewControllerDelegate{
+    func dataDidChange()
+}
+
 class ChallengeListViewController: UIViewController {
     
     //MARK: variables
@@ -27,7 +31,7 @@ class ChallengeListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        setupView()
         setupresultsCollection()
         setupButtonPlay()
         view.addSubview(reusltsCollection)
@@ -37,27 +41,16 @@ class ChallengeListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        do{
-            let games = try PersistenceSerivce.shared.context.fetch(fethRequestGames)
-            self.arrGame = games
-        } catch {}
-        
-        arrGame.sort(by: { $0.score > $1.score })
-        
-        if(arrGame.count > 5){
-            arrGame.suffix(from: 5).forEach {
-                PersistenceSerivce.shared.context.delete($0)
-            }
-            for _ in 6...arrGame.count{
-                arrGame.removeLast()
-            }
-        }
-        PersistenceSerivce.shared.saveContext()
+        loadData()
     }
     
-    
-    
     //MARK: Methods
+    
+    private func setupView(){
+        view.backgroundColor = .white
+        navigationItem.title = "DaftTap Challenge"
+    }
+    
     private func setupresultsCollection(){
         reusltsCollection.dataSource = self
         reusltsCollection.register(ResultCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
@@ -84,10 +77,31 @@ class ChallengeListViewController: UIViewController {
             ])
     }
     
+    private func loadData(){
+        do{
+            let games = try PersistenceSerivce.shared.context.fetch(fethRequestGames)
+            self.arrGame = games
+        } catch {}
+        
+        arrGame.sort(by: { $0.score > $1.score })
+        
+        if(arrGame.count > 5){
+            arrGame.suffix(from: 5).forEach {
+                PersistenceSerivce.shared.context.delete($0)
+            }
+            for _ in 6...arrGame.count{
+                arrGame.removeLast()
+            }
+        }
+        PersistenceSerivce.shared.saveContext()
+    }
+    
     //MARK: Selectors
     
     @objc func play(){
-        present(FirstViewController(), animated: true, completion: nil)
+        let gameViewController = GameViewController()
+        gameViewController.delegateChallengeList = self
+        present(gameViewController, animated: true, completion: nil)
     }
 }
 
@@ -101,10 +115,15 @@ extension ChallengeListViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = reusltsCollection.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ResultCollectionViewCell
-        cell.backgroundColor  = .gray
-        cell.layer.cornerRadius = 8.0
         cell.game = arrGame[indexPath.row]
         return cell
     }
-    
+}
+
+// Mark: Delegate ChallengeList
+extension ChallengeListViewController: ChallengeListViewControllerDelegate{
+    func dataDidChange() {
+        loadData()
+        reusltsCollection.reloadData()
+    }
 }

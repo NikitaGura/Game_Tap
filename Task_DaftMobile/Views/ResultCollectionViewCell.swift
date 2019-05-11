@@ -26,6 +26,7 @@ class ResultCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupView()
         setupLabelResult()
         setupLabelDate()
         addSubview(labelResult)
@@ -35,7 +36,12 @@ class ResultCollectionViewCell: UICollectionViewCell {
     
     
     //MARK: Methods
-
+    
+    private func setupView(){
+        layer.cornerRadius = 8.0
+        backgroundColor = .gray
+    }
+    
     private func setupLayout(){
         labelResult.translatesAutoresizingMaskIntoConstraints = false
         labelDate.translatesAutoresizingMaskIntoConstraints = false
@@ -44,19 +50,17 @@ class ResultCollectionViewCell: UICollectionViewCell {
             labelDate.topAnchor.constraint(equalTo: topAnchor, constant: 5),
             labelDate.centerXAnchor.constraint(equalTo: centerXAnchor),
             
-            labelResult.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
+            labelResult.bottomAnchor.constraint(equalTo: bottomAnchor),
             labelResult.centerXAnchor.constraint(equalTo: centerXAnchor)
             ])
     }
     
     private func setupLabelResult(){
         labelResult.font = UIFont.boldSystemFont(ofSize: 16)
-        labelResult.textAlignment = .left
     }
     
     private func setupLabelDate(){
         labelDate.font = UIFont.boldSystemFont(ofSize: 16)
-        labelDate.textAlignment = .left
     }
     
     required init?(coder aDecoder: NSCoder) {

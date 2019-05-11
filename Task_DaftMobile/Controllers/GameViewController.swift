@@ -11,6 +11,8 @@ import UIKit
 class GameViewController: UIViewController {
     
     //Mark: Variables
+    public var delegateChallengeList: ChallengeListViewControllerDelegate!
+    
     private lazy var labelTimerPrepare = UILabel()
     private lazy var labelTimerGame = UILabel()
     private lazy var labelScore = UILabel()
@@ -150,6 +152,7 @@ class GameViewController: UIViewController {
                 }))
                 alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {  action in
                     self.saveResultGame()
+                    self.delegateChallengeList.dataDidChange()
                     self.dismiss(animated: true, completion: nil)
                 }))
                 present(alert, animated: true, completion: nil)
